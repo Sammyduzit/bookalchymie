@@ -1,0 +1,179 @@
+{% extends "base.html" %}
+
+{% block title %}Library Home{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="header">
+        <h1>📚 Digital Library</h1>
+        <p>Discover, explore, and manage your book collection</p>
+    </div>
+
+    <div class="content">
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="flash-messages">
+                    {% for category, message in messages %}
+                        <div class="flash-message flash-{{ category }}">{{ message }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        <!-- Quick Actions -->
+        <div class="quick-actions">
+            <a href="{{ url_for('add_book') }}" class="action-btn">
+                📖 Add New Book
+            </a>
+            <a href="{{ url_for('add_author') }}" class="action-btn">
+                ✍️ Add New Author
+            </a>
+        </div>
+
+        <!-- Search and Sort Controls -->
+        <div class="controls">
+            <div class="search-section">
+                <form method="get" action="{{ url_for('homepage') }}" class="search-form">
+                    <input type="text" name="search" class="search-input"
+                           placeholder="🔍 Search by title, author, or year..."
+                           value="{{ search_query }}">
+                    <input type="hidden" name="sort" value="{{ sort_by }}">
+                    <button type="submit" class="search-btn">Search</button>
+                </form>
+            </div>
+
+            <div class="sort-controls">
+                <label for="sort-by" class="sort-label">Sort by:</label>
+                <select id="sort-by" class="sort-select" onchange="sortBooks()">
+                    <option value="title" {% if sort_by == 'title' %}selected{% endif %}>📖 Title</option>
+                    <option value="author" {% if sort_by == 'author' %}selected{% endif %}>👤 Author</option>
+                    <option value="year" {% if sort_by == 'year' %}selected{% endif %}>📅 Year</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Stats Bar -->
+        {% if books %}
+            <div class="stats-bar">
+                📊 Showing {{ books|length }} book{{ 's' if books|length != 1 else '' }}
+                {% if search_query %} for "{{ search_query }}"{% endif %}
+            </div>
+        {% endif %}
+
+        <!-- Books Container -->
+        <div id="books-container" class="books-container">
+            {% if books %}
+                {% for book in books %}
+                    <div class="book-card" data-title="{{ book.title|lower }}"
+                         data-author="{{ book.author.name|lower if book.author else 'unknown' }}"
+                         data-year="{{ book.publication_year or 0 }}">
+                        <div class="book-content">
+                            <img class="book-cover" src="{{ book.cover_url }}"
+                                 alt="Cover for {{ book.title }}" onerror="this.src='https://via.placeholder.com/120x180/cccccc/666666?text=No+Cover'">
+                            <div class="book-info">
+                                <h3 class="book-title">
+                                    <a href="{{ url_for('book_detail', book_id=book.id) }}">{{ book.title }}</a>
+                                </h3>
+                                <div class="book-meta">
+                                    <div class="meta-item">
+                                        <span class="meta-icon">👤</span>
+                                        <span>Author: <a href="{{ url_for('author_detail', author_id=book.author.id) }}"
+                                                        class="author-link">{{ book.author.name if book.author else "Unknown" }}</a></span>
+                                    </div>
+                                    <div class="meta-item">
+                                        <span class="meta-icon">📅</span>
+                                        <span>Year: {{ book.publication_year or "Unknown" }}</span>
+                                    </div>
+                                </div>
+
+                                {% if book.rating %}
+                                    <div class="rating-display">
+                                        <div class="rating-value">{{ book.rating }}/10</div>
+                                        <div class="rating-stars">{{ book.rating_stars }}</div>
+                                    </div>
+                                {% else %}
+                                    <div class="no-rating">Not rated yet</div>
+                                {% endif %}
+
+                                <div class="book-actions">
+                                    <a href="{{ url_for('edit_book', book_id=book.id) }}" class="edit-btn">✏️ Edit</a>
+                                    <form method="post" action="{{ url_for('delete_book', book_id=book.id) }}" style="display: inline;"
+                                          onsubmit="return confirm('⚠️ Are you sure you want to delete &quot;{{ book.title }}&quot;? This action cannot be undone.')">
+                                        <button type="submit" class="delete-btn">🗑️ Delete</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="no-results">
+                    {% if search_query %}
+                        <div class="no-results-icon">🔍</div>
+                        <h3>No books found</h3>
+                        <p>No books match your search for "<strong>{{ search_query }}</strong>".</p>
+                        <p>Try searching with different keywords or <a href="{{ url_for('homepage') }}">view all books</a>.</p>
+                    {% else %}
+                        <div class="no-results-icon">📚</div>
+                        <h3>Your library is empty</h3>
+                        <p>Start building your digital library collection!</p>
+                        <a href="{{ url_for('add_book') }}">📖 Add your first book</a>
+                    {% endif %}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<script>
+    function sortBooks() {
+        const sortBy = document.getElementById('sort-by').value;
+        const booksContainer = document.getElementById('books-container');
+        const bookCards = Array.from(booksContainer.getElementsByClassName('book-card'));
+
+        bookCards.sort((a, b) => {
+            let valueA, valueB;
+
+            switch (sortBy) {
+                case 'title':
+                    valueA = a.dataset.title;
+                    valueB = b.dataset.title;
+                    return valueA.localeCompare(valueB);
+
+                case 'author':
+                    valueA = a.dataset.author;
+                    valueB = b.dataset.author;
+                    return valueA.localeCompare(valueB);
+
+                case 'year':
+                    valueA = parseInt(a.dataset.year) || 0;
+                    valueB = parseInt(b.dataset.year) || 0;
+                    return valueB - valueA;
+
+                default:
+                    return 0;
+            }
+        });
+
+        booksContainer.innerHTML = '';
+        bookCards.forEach(card => booksContainer.appendChild(card));
+
+        const currentUrl = new URL(window.location);
+        currentUrl.searchParams.set('sort', sortBy);
+        window.history.replaceState({}, '', currentUrl);
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const sortParam = urlParams.get('sort');
+        if (sortParam && sortParam !== 'title') {
+            sortBooks();
+        }
+    });
+</script>
+{% endblock %}

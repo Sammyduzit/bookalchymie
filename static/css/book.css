@@ -1,0 +1,508 @@
+/* Book pages styles - original design preserved */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    padding: 2em;
+}
+
+.container {
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+    overflow: hidden;
+}
+
+.header {
+    background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+    color: white;
+    padding: 2.5em 2em;
+    text-align: center;
+    position: relative;
+}
+
+.header::before {
+    content: '📚';
+    font-size: 3em;
+    display: block;
+    margin-bottom: 0.5em;
+}
+
+.header h1 {
+    font-size: 2em;
+    font-weight: 300;
+    margin: 0;
+}
+
+.header p {
+    opacity: 0.9;
+    margin-top: 0.5em;
+    font-size: 1.1em;
+}
+
+.form-container {
+    padding: 2.5em;
+}
+
+.navigation {
+    margin-bottom: 2em;
+}
+
+.nav-link {
+    color: rgba(255, 255, 255, 0.9);
+    text-decoration: none;
+    font-weight: 400;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5em;
+    transition: color 0.3s;
+    font-size: 1rem;
+}
+
+.nav-link:hover {
+    background: #2d3436;
+    color: white;
+}
+
+.nav-link::before {
+    content: '←';
+    font-weight: bold;
+    font-size: 1rem;
+}
+
+/* Consolidated message styles */
+.message {
+    padding: 1em 1.5em;
+    margin-bottom: 2em;
+    border-radius: 8px;
+    border: none;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+}
+
+.success {
+    background: linear-gradient(135deg, #00b894 0%, #00cec9 100%);
+    color: white;
+}
+
+.success::before {
+    content: '✓';
+    font-weight: bold;
+    font-size: 1.2em;
+}
+
+.error {
+    background: linear-gradient(135deg, #e17055 0%, #fd79a8 100%);
+    color: white;
+}
+
+.error::before {
+    content: '⚠';
+    font-weight: bold;
+    font-size: 1.2em;
+}
+
+.form-group {
+    margin-bottom: 2em;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.8em;
+    font-weight: 600;
+    color: #2c3e50;
+    font-size: 1.1em;
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    padding: 1em;
+    border: 2px solid #e0e6ed;
+    border-radius: 10px;
+    font-size: 1em;
+    transition: all 0.3s ease;
+    background: #f8f9ff;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: #3498db;
+    background: white;
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+    transform: translateY(-2px);
+}
+
+.form-group input:hover,
+.form-group select:hover {
+    border-color: #bdc3c7;
+}
+
+.rating-group {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 1em;
+    align-items: center;
+}
+
+.rating-input {
+    text-align: center;
+    font-weight: bold;
+}
+
+.rating-display {
+    padding: 1em;
+    background: #f8f9ff;
+    border-radius: 8px;
+    text-align: center;
+    min-height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5em;
+    color: #ffc107;
+}
+
+.submit-btn {
+    width: 100%;
+    padding: 1.2em;
+    background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 1.2em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+}
+
+.submit-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(52, 152, 219, 0.4);
+}
+
+.submit-btn:active {
+    transform: translateY(-1px);
+}
+
+.form-footer {
+    margin-top: 2em;
+    padding-top: 2em;
+    border-top: 1px solid #e0e6ed;
+    text-align: center;
+}
+
+.form-footer a {
+    color: #3498db;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.form-footer a:hover {
+    text-decoration: underline;
+}
+
+.input-hint {
+    font-size: 0.9em;
+    color: #7f8c8d;
+    margin-top: 0.5em;
+}
+
+/* Book detail specific styles */
+.book-detail-container {
+    max-width: 900px;
+}
+
+.book-header {
+    display: grid;
+    grid-template-columns: 175px 1fr;
+    gap: 2em;
+    align-items: start;
+}
+
+.book-cover {
+    width: 100%;
+    max-width: 175px;
+    border-radius: 12px;
+    box-shadow: 0 15px 30px rgba(0,0,0,0.3);
+    transition: transform 0.3s;
+}
+
+.book-cover:hover {
+    transform: scale(1.05);
+}
+
+.book-info {
+    margin: 10px 0 0 60px;
+}
+
+.book-info h1 {
+    font-size: 2.2em;
+    margin-bottom: 0.5em;
+    font-weight: 300;
+    text-align: left;
+}
+
+.book-meta {
+    display: grid;
+    gap: 0.8em;
+}
+
+.meta-item {
+    display: flex;
+    align-items: center;
+    gap: 0.8em;
+    font-size: 1.1em;
+}
+
+.meta-icon {
+    font-size: 1.2em;
+    width: 24px;
+}
+
+.meta-label {
+    font-weight: 600;
+    opacity: 0.8;
+    min-width: 80px;
+}
+
+.meta-value {
+    opacity: 0.95;
+}
+
+.author-link {
+    color: #74b9ff;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.author-link:hover {
+    text-decoration: underline;
+}
+
+.rating-section {
+    background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+    border-radius: 16px;
+    padding: 2em;
+    margin-bottom: 2em;
+    position: relative;
+    overflow: hidden;
+}
+
+.rating-section::before {
+    content: '⭐';
+    position: absolute;
+    top: 1em;
+    right: 1.5em;
+    font-size: 3em;
+    opacity: 0.3;
+}
+
+.section-title {
+    font-size: 1.5em;
+    font-weight: 600;
+    color: #d63384;
+    margin-bottom: 1em;
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+}
+
+.current-rating {
+    display: flex;
+    align-items: center;
+    gap: 1em;
+    margin-bottom: 1.5em;
+    flex-wrap: wrap;
+}
+
+.rating-value {
+    font-size: 2em;
+    font-weight: bold;
+    color: #d63384;
+}
+
+.rating-stars {
+    font-size: 1.8em;
+    color: #ffc107;
+}
+
+.rating-form {
+    display: flex;
+    gap: 1em;
+    align-items: end;
+    flex-wrap: wrap;
+}
+
+.rating-input-group {
+    flex: 1;
+    min-width: 200px;
+}
+
+.rating-input-group label {
+    display: block;
+    margin-bottom: 0.5em;
+    font-weight: 600;
+    color: #d63384;
+}
+
+.rating-input {
+    width: 100%;
+    padding: 0.8em;
+    border: 2px solid #f8bbd9;
+    border-radius: 10px;
+    font-size: 1.1em;
+    text-align: center;
+    font-weight: bold;
+    transition: all 0.3s;
+}
+
+.rating-input:focus {
+    outline: none;
+    border-color: #d63384;
+    box-shadow: 0 0 0 3px rgba(214, 51, 132, 0.1);
+}
+
+.rate-btn {
+    background: linear-gradient(135deg, #d63384 0%, #f093fb 100%);
+    color: white;
+    border: none;
+    padding: 0.8em 1.5em;
+    border-radius: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    box-shadow: 0 4px 15px rgba(214, 51, 132, 0.3);
+}
+
+.rate-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(214, 51, 132, 0.4);
+}
+
+.actions-section {
+    background: #f8f9fa;
+    border-radius: 16px;
+    padding: 2em;
+    border-top: 4px solid #dc3545;
+}
+
+.actions-title {
+    font-size: 1.3em;
+    font-weight: 600;
+    color: #495057;
+    margin-bottom: 1em;
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+}
+
+.actions-title::before {
+    content: '⚙️';
+}
+
+.action-buttons {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1em;
+    flex-wrap: nowrap;
+}
+
+.btn {
+    padding: 0.8em 1.5em;
+    border: none;
+    border-radius: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5em;
+    min-width: 150px;
+    min-height: 60px;
+    justify-content: center;
+    white-space: nowrap;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+    color: white;
+    box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(52, 152, 219, 0.4);
+}
+
+.btn-danger {
+    background: linear-gradient(135deg, #dc3545 0%, #e74c3c 100%);
+    color: white;
+    box-shadow: 0 4px 15px rgba(220, 53, 69, 0.3);
+}
+
+.btn-danger:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(220, 53, 69, 0.4);
+}
+
+.no-rating {
+    color: #6c757d;
+    font-style: italic;
+    font-size: 1.1em;
+}
+
+@media (max-width: 768px) {
+    body {
+        padding: 1em;
+    }
+
+    .form-container {
+        padding: 1.5em;
+    }
+
+    .header {
+        padding: 2em 1.5em;
+    }
+
+    .rating-group {
+        grid-template-columns: 1fr;
+    }
+
+    .book-header {
+        grid-template-columns: 1fr;
+        text-align: center;
+    }
+
+    .book-cover {
+        max-width: 150px;
+        margin: 0 auto;
+    }
+
+    .rating-form {
+        flex-direction: column;
+    }
+
+    .book-info h1 {
+        font-size: 1.8em;
+    }
+
+    .action-buttons {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .btn {
+        width: 100%;
+        min-width: auto;
+    }
+}

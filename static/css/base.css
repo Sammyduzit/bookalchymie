@@ -1,0 +1,89 @@
+/* Base navigation styles only - backward compatible */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Navigation */
+.main-nav {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 1rem 0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+}
+
+.nav-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.nav-brand {
+    color: rgb(197, 214, 248);
+    text-decoration: none;
+    font-size: 1.5rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: transform 0.3s ease;
+}
+
+.nav-brand:hover {
+    transform: scale(1.05);
+}
+
+.nav-links {
+    display: flex;
+    gap: 1rem;
+}
+
+.nav-link {
+    color: rgba(255, 255, 255, 0.9);
+    text-decoration: none;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    background: rgb(167, 199, 231);
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-weight: 500;
+}
+
+.nav-link:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
+    color: white;
+}
+
+/* Add top margin to containers to account for fixed nav */
+.container {
+    margin-top: 100px;
+}
+
+@media (max-width: 768px) {
+    .nav-container {
+        padding: 0 1rem;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .nav-links {
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .container {
+        margin-top: 140px;
+    }
+}

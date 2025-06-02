@@ -1,0 +1,123 @@
+{% extends "base.html" %}
+
+{% block title %}Add New Book - Library{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/book.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="header">
+        <h1>Add New Book</h1>
+        <p>Expand your digital library collection</p>
+    </div>
+
+    <div class="form-container">
+        <nav class="navigation">
+            <a href="{{ url_for('homepage') }}" class="nav-link">Back to Library</a>
+        </nav>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="message {{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <form action="{{ url_for('add_book') }}" method="POST" id="addBookForm">
+            <div class="form-group">
+                <label for="title">📖 Book Title</label>
+                <input type="text" id="title" name="title" required placeholder="Enter the book title">
+                <div class="input-hint">The complete title of the book</div>
+            </div>
+
+            <div class="form-group">
+                <label for="isbn">🔢 ISBN</label>
+                <input type="text" id="isbn" name="isbn" placeholder="978-0-123456-78-9 (optional)">
+                <div class="input-hint">International Standard Book Number (optional)</div>
+            </div>
+
+            <div class="form-group">
+                <label for="publication_year">📅 Publication Year</label>
+                <input type="number" id="publication_year" name="publication_year"
+                       min="1000" max="2030" placeholder="2024">
+                <div class="input-hint">Year the book was published</div>
+            </div>
+
+            <div class="form-group">
+                <label for="author_id">👤 Author</label>
+                <select name="author_id" id="author_id" required>
+                    <option value="" disabled selected>Choose an author</option>
+                    {% for author in authors %}
+                        <option value="{{ author.id }}">{{ author.name }}</option>
+                    {% endfor %}
+                </select>
+                <div class="input-hint">
+                    Don't see an author? <a href="{{ url_for('add_author') }}">Add a new author</a>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="rating">⭐ Rating (Optional)</label>
+                <div class="rating-group">
+                    <input type="number" id="rating" name="rating" class="rating-input"
+                           min="1" max="10" step="0.1" placeholder="8.5">
+                    <div class="rating-display" id="ratingDisplay">
+                        Rate 1-10
+                    </div>
+                </div>
+                <div class="input-hint">Rate this book from 1 to 10 (you can add this later)</div>
+            </div>
+
+            <button type="submit" class="submit-btn">
+                ✨ Add Book to Library
+            </button>
+        </form>
+
+        <div class="form-footer">
+            <p>Need to add an author first? <a href="{{ url_for('add_author') }}">Add Author</a></p>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Rating display functionality
+    const ratingInput = document.getElementById('rating');
+    const ratingDisplay = document.getElementById('ratingDisplay');
+
+    function updateRatingDisplay() {
+        const rating = parseFloat(ratingInput.value);
+        if (rating && rating >= 1 && rating <= 10) {
+            const fullStars = Math.floor(rating / 2);
+            const halfStar = (rating % 2) >= 1 ? 1 : 0;
+            const emptyStars = 5 - fullStars - halfStar;
+
+            const starsHtml = '★'.repeat(fullStars) +
+                            (halfStar ? '☆' : '') +
+                            '☆'.repeat(emptyStars);
+
+            ratingDisplay.innerHTML = `${rating}/10<br>${starsHtml}`;
+        } else {
+            ratingDisplay.innerHTML = 'Rate 1-10';
+        }
+    }
+
+    ratingInput.addEventListener('input', updateRatingDisplay);
+    ratingInput.addEventListener('change', updateRatingDisplay);
+
+    // Form validation enhancement
+    document.getElementById('addBookForm').addEventListener('submit', function(e) {
+        const rating = document.getElementById('rating').value;
+        if (rating && (rating < 1 || rating > 10)) {
+            e.preventDefault();
+            alert('Rating must be between 1 and 10');
+            return false;
+        }
+    });
+
+    // Auto-focus on first input
+    document.getElementById('title').focus();
+</script>
+{% endblock %}

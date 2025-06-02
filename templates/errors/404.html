@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block title %}Page Not Found - Digital Library{% endblock %}
+
+{% block header %}
+<div class="page-header" style="background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);">
+    <h1>404 - Page Not Found</h1>
+    <p>The page you're looking for doesn't exist</p>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="content-section text-center">
+    <div style="font-size: 8rem; opacity: 0.3; margin-bottom: 2rem;">📚</div>
+    <h2 style="margin-bottom: 1rem;">Oops! This page is missing from our library</h2>
+    <p style="margin-bottom: 2rem; color: #6c757d;">
+        The page you requested could not be found. It might have been moved or deleted.
+    </p>
+    <a href="{{ url_for('homepage') }}" class="btn btn-primary">
+        🏠 Return to Library
+    </a>
+</div>
+{% endblock %}

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>{% block title %}Digital Library{% endblock %}</title>
+
+    <!-- Base CSS (navigation only) -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+
+    <!-- Page-specific CSS -->
+    {% block css %}{% endblock %}
+</head>
+<body>
+
+    <!-- Navigation Header -->
+    <nav class="main-nav">
+        <div class="nav-container">
+            <a href="{{ url_for('homepage') }}" class="nav-brand">
+                📚 Digital Library
+            </a>
+            <div class="nav-links">
+                <a href="{{ url_for('homepage') }}" class="nav-link">
+                    🏠 Home
+                </a>
+                <a href="{{ url_for('add_book') }}" class="nav-link">
+                    📖 Add Book
+                </a>
+                <a href="{{ url_for('add_author') }}" class="nav-link">
+                    ✍️ Add Author
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    {% block content %}{% endblock %}
+
+</body>
+</html>

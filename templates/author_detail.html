@@ -1,0 +1,133 @@
+{% extends "base.html" %}
+
+{% block title %}{{ author.name }} - Author Details{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/author.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="container author-detail-container">
+    <div class="header author-header">
+        <div class="navigation">
+            <a href="{{ url_for('homepage') }}" class="nav-link">Back to Library</a>
+            <a href="{{ url_for('add_book') }}" class="nav-link">Add New Book</a>
+        </div>
+
+        <h1 class="author-name">{{ author.name }}</h1>
+
+        <div class="author-info-grid">
+            <div class="author-details">
+                {% if author.birth_date %}
+                    <div class="detail-item">
+                        <span class="detail-icon">🎂</span>
+                        <span class="detail-label">Born:</span>
+                        <span class="detail-value">{{ author.birth_date.strftime('%B %d, %Y') }}</span>
+                    </div>
+                {% endif %}
+                {% if author.date_of_death %}
+                    <div class="detail-item">
+                        <span class="detail-icon">⚰️</span>
+                        <span class="detail-label">Died:</span>
+                        <span class="detail-value">{{ author.date_of_death.strftime('%B %d, %Y') }}</span>
+                    </div>
+                {% endif %}
+                {% if author.birth_date %}
+                    <div class="detail-item">
+                        <span class="detail-icon">📊</span>
+                        <span class="detail-label">Age:</span>
+                        <span class="detail-value">
+                            {% if author.date_of_death %}
+                                {{ (author.date_of_death.year - author.birth_date.year) }} years (at death)
+                            {% else %}
+                                ~ {{ (2024 - author.birth_date.year) }} years
+                            {% endif %}
+                        </span>
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="author-stats">
+                <div class="stat-card">
+                    <span class="stat-value">{{ author.book_count }}</span>
+                    <span class="stat-label">Books in Library</span>
+                </div>
+                {% if author.average_rating %}
+                    <div class="stat-card">
+                        <span class="stat-value">{{ author.average_rating }}</span>
+                        <span class="stat-label">Average Rating</span>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="content">
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="message {{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <div class="books-section">
+            <h2 class="section-title">Books by {{ author.name }}</h2>
+
+            {% if books %}
+                <div class="book-grid">
+                    {% for book in books %}
+                        <div class="book-card">
+                            <h3 class="book-title">
+                                <a href="{{ url_for('book_detail', book_id=book.id) }}">{{ book.title }}</a>
+                            </h3>
+                            <div class="book-meta">
+                                <div class="book-meta-item">
+                                    <span class="book-icon">📅</span>
+                                    <span>Published: {{ book.publication_year or "Unknown" }}</span>
+                                </div>
+                                {% if book.isbn %}
+                                    <div class="book-meta-item">
+                                        <span class="book-icon">🔢</span>
+                                        <span>ISBN: {{ book.isbn }}</span>
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div class="book-rating">
+                                {% if book.rating %}
+                                    <div class="rating-value">{{ book.rating }}/10</div>
+                                    <div class="rating-stars">{{ book.rating_stars }}</div>
+                                {% else %}
+                                    <div class="no-rating">Not rated yet</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="no-books">
+                    <div class="no-books-icon">📚</div>
+                    <h3>No books found</h3>
+                    <p>{{ author.name }} doesn't have any books in the library yet.</p>
+                    <a href="{{ url_for('add_book') }}">➕ Add a book by {{ author.name }}</a>
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Author Actions -->
+        <div class="actions-section">
+            <h3 class="actions-title">Author Actions</h3>
+            <div class="action-buttons">
+                <a href="{{ url_for('edit_author', author_id=author.id) }}" class="btn btn-primary">
+                    ✏️ Edit Author
+                </a>
+                <form method="post" action="{{ url_for('delete_author', author_id=author.id) }}" class="delete-form"
+                      onsubmit="return confirm('⚠️ Are you sure you want to delete {{ author.name }}? This will also delete ALL books by this author. This action cannot be undone!')">
+                    <button type="submit" class="btn btn-danger">🗑️ Delete Author</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

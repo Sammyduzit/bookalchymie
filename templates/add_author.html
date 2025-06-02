@@ -1,0 +1,141 @@
+{% extends "base.html" %}
+
+{% block title %}Add New Author - Library{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/author.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="header">
+        <h1>Add New Author</h1>
+        <p>Register a new author in your library</p>
+    </div>
+
+    <div class="form-container">
+        <nav class="navigation">
+            <a href="{{ url_for('homepage') }}" class="nav-link">Back to Library</a>
+        </nav>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="message {{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <form action="{{ url_for('add_author') }}" method="POST" id="addAuthorForm">
+            <div class="form-group">
+                <label for="name">👤 Author Name</label>
+                <input type="text" id="name" name="name" required
+                       placeholder="Enter the author's full name">
+                <div class="input-hint">The complete name of the author (e.g., "Jane Austen")</div>
+            </div>
+
+            <div class="form-group">
+                <label for="birthdate">🎂 Birth Date</label>
+                <input type="date" id="birthdate" name="birthdate"
+                       max="{{ current_date }}" onchange="calculateAge()">
+                <div class="input-hint">When was the author born? (Optional but recommended)</div>
+            </div>
+
+            <div class="form-group">
+                <label for="date_of_death">⚰️ Date of Death (if applicable)</label>
+                <input type="date" id="date_of_death" name="date_of_death"
+                       max="{{ current_date }}" onchange="calculateAge()">
+                <div class="input-hint">Leave blank if the author is still living</div>
+            </div>
+
+            <div class="date-info" id="dateInfo" style="display: none;">
+                <div class="date-info-title">Author Information</div>
+                <div class="date-info-text" id="dateInfoText"></div>
+                <div class="living-status" id="livingStatus"></div>
+            </div>
+
+            <button type="submit" class="submit-btn">
+                ✨ Add Author to Library
+            </button>
+        </form>
+
+        <div class="form-footer">
+            <p>Ready to add books? <a href="{{ url_for('add_book') }}">Add a New Book</a></p>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Get current date for validation
+    const currentDate = new Date().toISOString().split('T')[0];
+    document.querySelectorAll('input[type="date"]').forEach(input => {
+        input.setAttribute('max', currentDate);
+    });
+
+    function calculateAge() {
+        const birthDate = document.getElementById('birthdate').value;
+        const deathDate = document.getElementById('date_of_death').value;
+        const dateInfo = document.getElementById('dateInfo');
+        const dateInfoText = document.getElementById('dateInfoText');
+        const livingStatus = document.getElementById('livingStatus');
+
+        if (!birthDate) {
+            dateInfo.style.display = 'none';
+            return;
+        }
+
+        const birth = new Date(birthDate);
+        const today = new Date();
+        const death = deathDate ? new Date(deathDate) : null;
+
+        let infoText = '';
+        let statusHtml = '';
+
+        if (death) {
+            // Author is deceased
+            const ageAtDeath = Math.floor((death - birth) / (365.25 * 24 * 60 * 60 * 1000));
+            infoText = `This author lived for ${ageAtDeath} years.`;
+            statusHtml = '<span class="status-badge deceased">Deceased</span>';
+
+            // Validate that death date is after birth date
+            if (death <= birth) {
+                infoText = '⚠️ Death date must be after birth date.';
+                statusHtml = '<span class="status-badge deceased">Invalid Dates</span>';
+            }
+        } else {
+            // Author is living
+            const currentAge = Math.floor((today - birth) / (365.25 * 24 * 60 * 60 * 1000));
+            infoText = `This author is approximately ${currentAge} years old.`;
+            statusHtml = '<span class="status-badge living">Living</span>';
+        }
+
+        dateInfoText.textContent = infoText;
+        livingStatus.innerHTML = statusHtml;
+        dateInfo.style.display = 'block';
+    }
+
+    // Form validation
+    document.getElementById('addAuthorForm').addEventListener('submit', function(e) {
+        const birthDate = document.getElementById('birthdate').value;
+        const deathDate = document.getElementById('date_of_death').value;
+
+        if (birthDate && deathDate) {
+            const birth = new Date(birthDate);
+            const death = new Date(deathDate);
+
+            if (death <= birth) {
+                e.preventDefault();
+                alert('Date of death must be after the birth date.');
+                return false;
+            }
+        }
+    });
+
+    // Auto-focus on name input
+    document.getElementById('name').focus();
+
+    // Add event listeners for date validation
+    document.getElementById('birthdate').addEventListener('change', calculateAge);
+    document.getElementById('date_of_death').addEventListener('change', calculateAge);
+</script>
+{% endblock %}
